@@ -9,7 +9,7 @@
     <link rel="stylesheet" href="style.css" />
   </head>
 
-  <body>
+  <body class="dashboard-page">
     <header class="main-header">
       <div class="header-brand">
         <div class="brand-icon">IT</div>
@@ -52,28 +52,36 @@
             <p>Number of tickets per status</p>
           </div>
         </div>
-        <canvas id="status-chart" height="120"></canvas>
+        <div class="chart-box">
+          <canvas id="status-chart"></canvas>
+        </div>
       </section>
 
-      <section class="card">
-        <div class="section-heading">
-          <div>
-            <h2>By priority</h2>
-            <p>Number of tickets per priority level</p>
+      <div class="chart-grid">
+        <section class="card">
+          <div class="section-heading">
+            <div>
+              <h2>By priority</h2>
+              <p>Number of tickets per priority level</p>
+            </div>
           </div>
-        </div>
-        <canvas id="priority-chart" height="120"></canvas>
-      </section>
+          <div class="chart-box">
+            <canvas id="priority-chart"></canvas>
+          </div>
+        </section>
 
-      <section class="card">
-        <div class="section-heading">
-          <div>
-            <h2>By technician</h2>
-            <p>Tickets assigned to each technician</p>
+        <section class="card">
+          <div class="section-heading">
+            <div>
+              <h2>By technician</h2>
+              <p>Tickets assigned to each technician</p>
+            </div>
           </div>
-        </div>
-        <canvas id="technician-chart" height="120"></canvas>
-      </section>
+          <div class="chart-box">
+            <canvas id="technician-chart"></canvas>
+          </div>
+        </section>
+      </div>
     </main>
 
     <footer class="main-footer">
