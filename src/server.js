@@ -48,6 +48,7 @@ app.use(
 );
 
 app.use(express.static(path.join(__dirname, '..', 'public')));
+app.use('/vendor/chart.js', express.static(path.join(__dirname, '..', 'node_modules', 'chart.js', 'dist')));
 
 // ---------- helpers ----------
 
@@ -522,6 +523,92 @@ app.get('/api/tickets', requireAuth, (req, res) => {
   res.json(rows);
 });
 
+// Export tickets as CSV (staff only).
+// Respects the same filters as the list: status, priority and q.
+// Must stay above GET /api/tickets/:id, otherwise "export.csv" is read as an ID.
+app.get('/api/tickets/export.csv', requireAuth, requireStaff, (req, res) => {
+  const conditions = [];
+  const params = [];
+
+  if (req.query.status) {
+    if (!TICKET_STATUSES.includes(req.query.status)) {
+      return res.status(400).json({ error: 'Invalid status filter.' });
+    }
+
+    conditions.push('t.status = ?');
+    params.push(req.query.status);
+  }
+
+  if (req.query.priority) {
+    if (!PRIORITIES.includes(req.query.priority)) {
+      return res.status(400).json({ error: 'Invalid priority filter.' });
+    }
+
+    conditions.push('t.priority = ?');
+    params.push(req.query.priority);
+  }
+
+  const q = String(req.query.q || '').trim().slice(0, 120);
+
+  if (q) {
+    conditions.push('(t.title LIKE ? OR CAST(t.id AS TEXT) LIKE ?)');
+    params.push(`%${q}%`, `%${q}%`);
+  }
+
+  const whereSql = conditions.length ? `WHERE ${conditions.join(' AND ')}` : '';
+
+  const rows = db
+    .prepare(`
+      SELECT
+        t.id,
+        t.title,
+        c.name AS category,
+        t.priority,
+        t.status,
+        u.name AS created_by_name,
+        t.created_at,
+        t.closed_at
+      FROM tickets t
+      JOIN categories c ON c.id = t.category_id
+      JOIN users u ON u.id = t.created_by
+      ${whereSql}
+      ORDER BY t.created_at DESC, t.id DESC
+    `)
+    .all(...params);
+
+  const headers = [
+    'ID', 'Title', 'Category', 'Priority', 'Status',
+    'Created by', 'Created at', 'Closed at',
+  ];
+
+  // Quote each value, double any quote inside it, and neutralise
+  // values starting with = + - @ so spreadsheets do not run them as formulas.
+  const csvCell = (value) => {
+    let text = value === null || value === undefined ? '' : String(value);
+
+    if (/^[=+\-@]/.test(text)) {
+      text = `'${text}`;
+    }
+
+    return `"${text.replace(/"/g, '""')}"`;
+  };
+
+  const lines = [
+    headers.map(csvCell).join(','),
+    ...rows.map((r) =>
+      [
+        r.id, r.title, r.category, r.priority, r.status,
+        r.created_by_name, r.created_at, r.closed_at,
+      ].map(csvCell).join(',')
+    ),
+  ];
+
+  // The BOM (\uFEFF) lets Excel read accented characters correctly.
+  res.set('Content-Type', 'text/csv; charset=utf-8');
+  res.set('Content-Disposition', 'attachment; filename="tickets.csv"');
+  res.send('\uFEFF' + lines.join('\r\n'));
+});
+
 // Get ticket details, including the assigned technician's name.
 app.get('/api/tickets/:id', requireAuth, (req, res) => {
   const user = req.session.user;
@@ -684,6 +771,51 @@ app.get('/api/tickets/:id/history', requireAuth, (req, res) => {
   `).all(ticketId);
 
   res.json(history);
+});
+
+// ---------- statistics (staff only) ----------
+
+// Ticket statistics for the dashboard: by status, by priority,
+// by technician, and average resolution time in hours.
+app.get('/api/stats', requireAuth, requireStaff, (req, res) => {
+  const byStatus = db.prepare(`
+    SELECT status, COUNT(*) AS count
+    FROM tickets
+    GROUP BY status
+  `).all();
+
+  const byPriority = db.prepare(`
+    SELECT priority, COUNT(*) AS count
+    FROM tickets
+    GROUP BY priority
+  `).all();
+
+  const byTechnician = db.prepare(`
+    SELECT
+      t.assigned_to AS technician_id,
+      COALESCE(u.name, 'Unassigned') AS technician_name,
+      COUNT(*) AS count
+    FROM tickets t
+    LEFT JOIN users u ON u.id = t.assigned_to
+    GROUP BY t.assigned_to
+    ORDER BY count DESC
+  `).all();
+
+  // Average time between creation and closing, in hours (closed tickets only).
+  const { avg_hours } = db.prepare(`
+    SELECT AVG((julianday(closed_at) - julianday(created_at)) * 24) AS avg_hours
+    FROM tickets
+    WHERE closed_at IS NOT NULL
+  `).get();
+
+  res.json({
+    byStatus,
+    byPriority,
+    byTechnician,
+    averageResolutionHours: avg_hours === null
+      ? null
+      : Math.round(avg_hours * 10) / 10,
+  });
 });
 
 // ---------- errors ----------
