@@ -31,7 +31,7 @@ const STAFF_ROLES = ["technician", "admin"];
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 const app = express();
-
+app.set('trust proxy', 1);
 app.use(helmet());
 app.use(express.json({ limit: "50kb" }));
 
