@@ -831,6 +831,12 @@ app.use((err, req, res, next) => {
 
 // ---------- start server ----------
 
-app.listen(PORT, () => {
-  console.log(`Helpdesk running on http://localhost:${PORT}`);
-});
+// Export the app for the tests (Supertest).
+module.exports = app;
+
+// Start the server only when this file is run directly (npm run dev / start).
+if (require.main === module) {
+  app.listen(PORT, () => {
+    console.log(`Helpdesk running on http://localhost:${PORT}`);
+  });
+}
