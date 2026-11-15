@@ -1,89 +1,87 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#f4f7fb">
-  <meta name="description" content="IT Helpdesk - statistics dashboard">
-  <title>IT Helpdesk | Statistics</title>
-  <link rel="stylesheet" href="style.css">
-</head>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#f4f7fb" />
+    <meta name="description" content="IT Helpdesk - statistics dashboard" />
+    <title>IT Helpdesk | Statistics</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
 
-<body>
-  <header class="main-header">
-    <div class="header-brand">
-      <div class="brand-icon">IT</div>
-      <div>
-        <h1>IT Helpdesk</h1>
-        <span>Service Management Portal</span>
-      </div>
-    </div>
-
-    <div class="header-user">
-      <a href="/" class="logout-button">Back to tickets</a>
-    </div>
-  </header>
-
-  <main class="main-container">
-
-    <p id="message" role="alert" aria-live="polite"></p>
-
-    <section class="dashboard-welcome">
-      <div>
-        <span class="eyebrow">ANALYTICS</span>
-        <h2>Statistics</h2>
-        <p>Ticket activity by status, priority and technician.</p>
-      </div>
-    </section>
-
-    <section class="stats-grid" aria-label="Summary">
-      <article class="stat-card">
+  <body>
+    <header class="main-header">
+      <div class="header-brand">
+        <div class="brand-icon">IT</div>
         <div>
-          <p>Average resolution</p>
-          <h3 id="avg-resolution">-</h3>
-          <span class="stat-caption">Hours, closed tickets</span>
-        </div>
-      </article>
-    </section>
-
-    <section class="card">
-      <div class="section-heading">
-        <div>
-          <h2>By status</h2>
-          <p>Number of tickets per status</p>
+          <h1>IT Helpdesk</h1>
+          <span>Service Management Portal</span>
         </div>
       </div>
-      <canvas id="status-chart" height="120"></canvas>
-    </section>
 
-    <section class="card">
-      <div class="section-heading">
-        <div>
-          <h2>By priority</h2>
-          <p>Number of tickets per priority level</p>
-        </div>
+      <div class="header-user">
+        <a href="/" class="logout-button">Back to tickets</a>
       </div>
-      <canvas id="priority-chart" height="120"></canvas>
-    </section>
+    </header>
 
-    <section class="card">
-      <div class="section-heading">
+    <main class="main-container">
+      <p id="message" role="alert" aria-live="polite"></p>
+
+      <section class="dashboard-welcome">
         <div>
-          <h2>By technician</h2>
-          <p>Tickets assigned to each technician</p>
+          <span class="eyebrow">ANALYTICS</span>
+          <h2>Statistics</h2>
+          <p>Ticket activity by status, priority and technician.</p>
         </div>
-      </div>
-      <canvas id="technician-chart" height="120"></canvas>
-    </section>
+      </section>
 
-  </main>
+      <section class="stats-grid" aria-label="Summary">
+        <article class="stat-card">
+          <div>
+            <p>Average resolution</p>
+            <h3 id="avg-resolution">-</h3>
+            <span class="stat-caption">Hours, closed tickets</span>
+          </div>
+        </article>
+      </section>
 
-  <footer class="main-footer">
-    <p>IT Helpdesk &copy; 2026 · IT Service Management Portal</p>
-  </footer>
+      <section class="card">
+        <div class="section-heading">
+          <div>
+            <h2>By status</h2>
+            <p>Number of tickets per status</p>
+          </div>
+        </div>
+        <canvas id="status-chart" height="120"></canvas>
+      </section>
 
-  <!-- Chart.js served locally by the server -->
-  <script src="/vendor/chart.js/chart.umd.js"></script>
-  <script src="dashboard.js"></script>
-</body>
+      <section class="card">
+        <div class="section-heading">
+          <div>
+            <h2>By priority</h2>
+            <p>Number of tickets per priority level</p>
+          </div>
+        </div>
+        <canvas id="priority-chart" height="120"></canvas>
+      </section>
+
+      <section class="card">
+        <div class="section-heading">
+          <div>
+            <h2>By technician</h2>
+            <p>Tickets assigned to each technician</p>
+          </div>
+        </div>
+        <canvas id="technician-chart" height="120"></canvas>
+      </section>
+    </main>
+
+    <footer class="main-footer">
+      <p>IT Helpdesk &copy; 2026 · IT Service Management Portal</p>
+    </footer>
+
+    <!-- Chart.js served locally by the server -->
+    <script src="/vendor/chart.js/chart.umd.js"></script>
+    <script src="dashboard.js"></script>
+  </body>
 </html>

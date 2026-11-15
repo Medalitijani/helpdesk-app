@@ -1,102 +1,95 @@
-
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Ticket Details - IT Helpdesk</title>
-  <link rel="stylesheet" href="style.css">
-</head>
-<body>
-  <header>
-    <h1>IT Helpdesk</h1>
-    <div id="userbox" hidden>
-      <span id="whoami"></span>
-      <button id="logout" type="button">Log out</button>
-    </div>
-  </header>
-
-  <main>
-    <p>
-      <a href="/">← Back to tickets</a>
-    </p>
-
-    <p id="message" role="alert"></p>
-
-    <section class="card">
-      <h2>Ticket Details</h2>
-      <div id="ticket-details">
-        Loading ticket...
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Ticket Details - IT Helpdesk</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <header>
+      <h1>IT Helpdesk</h1>
+      <div id="userbox" hidden>
+        <span id="whoami"></span>
+        <button id="logout" type="button">Log out</button>
       </div>
-    </section>
+    </header>
 
-    <section class="card" id="staff-controls" hidden>
-      <h2>Manage Ticket</h2>
+    <main>
+      <p>
+        <a href="/">← Back to tickets</a>
+      </p>
 
-      <form id="update-form">
-        <label>
-          Status
-          <select name="status" id="status">
-            <option value="open">Open</option>
-            <option value="in_progress">In progress</option>
-            <option value="waiting">Waiting</option>
-            <option value="resolved">Resolved</option>
-            <option value="closed">Closed</option>
-          </select>
-        </label>
+      <p id="message" role="alert"></p>
 
-        <label>
-          Priority
-          <select name="priority" id="priority">
-            <option value="low">Low</option>
-            <option value="medium">Medium</option>
-            <option value="high">High</option>
-            <option value="critical">Critical</option>
-          </select>
-        </label>
+      <section class="card">
+        <h2>Ticket Details</h2>
+        <div id="ticket-details">Loading ticket...</div>
+      </section>
 
-        <label>
-          Assign to technician
-          <select name="assigned_to" id="assigned-to">
-            <option value="">Unassigned</option>
-          </select>
-        </label>
+      <section class="card" id="staff-controls" hidden>
+        <h2>Manage Ticket</h2>
 
-        <button type="submit">Save changes</button>
-      </form>
-    </section>
+        <form id="update-form">
+          <label>
+            Status
+            <select name="status" id="status">
+              <option value="open">Open</option>
+              <option value="in_progress">In progress</option>
+              <option value="waiting">Waiting</option>
+              <option value="resolved">Resolved</option>
+              <option value="closed">Closed</option>
+            </select>
+          </label>
 
-    <section class="card">
-      <h2>Comments</h2>
+          <label>
+            Priority
+            <select name="priority" id="priority">
+              <option value="low">Low</option>
+              <option value="medium">Medium</option>
+              <option value="high">High</option>
+              <option value="critical">Critical</option>
+            </select>
+          </label>
 
-      <div id="comments">
-        Loading comments...
-      </div>
+          <label>
+            Assign to technician
+            <select name="assigned_to" id="assigned-to">
+              <option value="">Unassigned</option>
+            </select>
+          </label>
 
-      <form id="comment-form">
-        <label>
-          Add a comment
-          <textarea
-            name="message"
-            rows="4"
-            required
-            maxlength="2000"
-            placeholder="Write your comment..."
-          ></textarea>
-        </label>
+          <button type="submit">Save changes</button>
+        </form>
+      </section>
 
-        <button type="submit">Send comment</button>
-      </form>
-    </section>
+      <section class="card">
+        <h2>Comments</h2>
 
-    <section class="card">
-      <h2>Ticket History</h2>
-      <div id="history">
-        Loading history...
-      </div>
-    </section>
-  </main>
+        <div id="comments">Loading comments...</div>
 
-  <script src="ticket.js"></script>
-</body>
+        <form id="comment-form">
+          <label>
+            Add a comment
+            <textarea
+              name="message"
+              rows="4"
+              required
+              maxlength="2000"
+              placeholder="Write your comment..."
+            ></textarea>
+          </label>
+
+          <button type="submit">Send comment</button>
+        </form>
+      </section>
+
+      <section class="card">
+        <h2>Ticket History</h2>
+        <div id="history">Loading history...</div>
+      </section>
+    </main>
+
+    <script src="ticket.js"></script>
+  </body>
 </html>
