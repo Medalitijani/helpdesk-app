@@ -87,6 +87,18 @@ npm run seed
 
 This creates five demo accounts and 17 tickets. All demo accounts use the password `Demo1234!`. These accounts exist only for local demonstration.
 
+## Live demo
+
+The application is deployed on Render (free plan):
+
+**https://helpdesk-app-9y13.onrender.com**
+
+Please note:
+
+- The free instance sleeps after a period of inactivity, so the first visit can take around 50 seconds to load.
+- Data is stored in a local SQLite file on the free plan. It may be erased when the service restarts or is redeployed. Persistent storage would require a paid disk or a hosted database such as PostgreSQL.
+- Create an account with the form on the home page. The first account registered becomes the administrator.
+
 ## Roles
 
 | Capability                                 | User | Technician | Admin |
