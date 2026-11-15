@@ -8,7 +8,8 @@
     "dev": "node --watch src/server.js",
     "test": "jest --runInBand",
     "lint": "eslint src tests public",
-    "format": "prettier --write \"src/**/*.js\" \"tests/**/*.js\" \"public/**/*.{js,css,html}\""
+    "format": "prettier --write \"src/**/*.js\" \"tests/**/*.js\" \"public/**/*.{js,css,html}\"",
+    "seed": "node src/seed.js"
   },
   "license": "MIT",
   "dependencies": {

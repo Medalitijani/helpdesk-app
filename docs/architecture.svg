@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 400" width="1000" height="400" font-family="Arial, sans-serif">
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="9" refY="5" orient="auto">
+      <path d="M0,0 L10,5 L0,10 z" fill="#1f4e8c"/>
+    </marker>
+  </defs>
+
+  <rect width="1000" height="400" fill="#f8fafd"/>
+  <text x="500" y="50" text-anchor="middle" font-size="22" font-weight="bold" fill="#1f4e8c">IT Helpdesk - Architecture</text>
+
+  <!-- Browser -->
+  <rect x="40" y="120" width="220" height="120" rx="10" fill="#ffffff" stroke="#1f6fd1" stroke-width="2"/>
+  <text x="150" y="155" text-anchor="middle" font-size="18" font-weight="bold" fill="#1f4e8c">Browser</text>
+  <text x="150" y="182" text-anchor="middle" font-size="13" fill="#4a5b70">index.html, app.js</text>
+  <text x="150" y="202" text-anchor="middle" font-size="13" fill="#4a5b70">dashboard.html, ticket.html</text>
+
+  <!-- Express API -->
+  <rect x="390" y="120" width="220" height="120" rx="10" fill="#ffffff" stroke="#1f6fd1" stroke-width="2"/>
+  <text x="500" y="155" text-anchor="middle" font-size="18" font-weight="bold" fill="#1f4e8c">Express API</text>
+  <text x="500" y="182" text-anchor="middle" font-size="13" fill="#4a5b70">src/server.js</text>
+  <text x="500" y="202" text-anchor="middle" font-size="13" fill="#4a5b70">Sessions, roles, validation</text>
+
+  <!-- SQLite -->
+  <rect x="740" y="120" width="220" height="120" rx="10" fill="#ffffff" stroke="#1f6fd1" stroke-width="2"/>
+  <text x="850" y="155" text-anchor="middle" font-size="18" font-weight="bold" fill="#1f4e8c">SQLite</text>
+  <text x="850" y="182" text-anchor="middle" font-size="13" fill="#4a5b70">helpdesk.db</text>
+  <text x="850" y="202" text-anchor="middle" font-size="13" fill="#4a5b70">via better-sqlite3</text>
+
+  <!-- Chart.js -->
+  <rect x="40" y="280" width="220" height="80" rx="10" fill="#ffffff" stroke="#1f6fd1" stroke-width="2"/>
+  <text x="150" y="315" text-anchor="middle" font-size="18" font-weight="bold" fill="#1f4e8c">Chart.js</text>
+  <text x="150" y="340" text-anchor="middle" font-size="13" fill="#4a5b70">served at /vendor/chart.js</text>
+
+  <!-- Arrows -->
+  <line x1="260" y1="180" x2="385" y2="180" stroke="#1f4e8c" stroke-width="2" marker-end="url(#arrow)"/>
+  <text x="322" y="168" text-anchor="middle" font-size="12" fill="#1f4e8c">HTTP / JSON (fetch)</text>
+
+  <line x1="610" y1="180" x2="735" y2="180" stroke="#1f4e8c" stroke-width="2" marker-end="url(#arrow)"/>
+  <text x="672" y="168" text-anchor="middle" font-size="12" fill="#1f4e8c">SQL (parameterised)</text>
+
+  <line x1="150" y1="240" x2="150" y2="275" stroke="#1f4e8c" stroke-width="2" marker-end="url(#arrow)"/>
+  <text x="162" y="262" font-size="12" fill="#1f4e8c">local script</text>
+</svg>
