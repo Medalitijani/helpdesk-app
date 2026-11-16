@@ -908,3 +908,191 @@ td a:hover {
     grid-template-columns: 1fr;
   }
 }
+
+/* =========================================
+   NAVY & ELECTRIC BLUE - GLOBAL THEME
+   Applied across login, tickets, details and analytics.
+   ========================================= */
+:root {
+  color-scheme: dark;
+  --bg: #071326;
+  --surface: #0d1d35;
+  --text: #e8f1ff;
+  --muted: #91a6c4;
+  --primary: #398bff;
+  --primary-dark: #1769d2;
+  --primary-light: #142f54;
+  --border: #203958;
+  --success: #36c995;
+  --danger: #ff7185;
+  --shadow: 0 14px 38px rgba(0, 0, 0, .22);
+  --radius: 16px;
+}
+
+html { min-height: 100%; background: var(--bg); }
+body {
+  min-height: 100vh;
+  background:
+    radial-gradient(ellipse at 12% 0%, rgba(35, 105, 190, .18), transparent 36%),
+    radial-gradient(ellipse at 92% 18%, rgba(24, 74, 142, .13), transparent 32%),
+    var(--bg);
+  color: var(--text);
+}
+.main-header, body > header {
+  background: rgba(10, 26, 48, .94);
+  border-bottom: 1px solid var(--border);
+  box-shadow: 0 8px 28px rgba(0, 0, 0, .18);
+  color: var(--text);
+}
+body > header {
+  min-height: 76px;
+  padding: 14px 5%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+}
+body > header h1 { margin: 0; font-size: 21px; }
+.header-brand h1, body > header h1 { color: #f4f8ff; }
+.header-brand span, .header-user, .user-details small { color: var(--muted); }
+.brand-icon {
+  background: linear-gradient(135deg, #54a2ff, #1769d2);
+  box-shadow: 0 7px 20px rgba(57, 139, 255, .28);
+}
+.main-container { margin-top: 34px; margin-bottom: 42px; }
+.dashboard-welcome h2, .auth-intro h2 { color: #f4f8ff; }
+.dashboard-welcome p, .section-heading p, .auth-intro > p,
+.auth-card > p, .main-footer p { color: var(--muted); }
+.eyebrow { color: #64aaff; }
+.dashboard-label {
+  background: rgba(54, 201, 149, .10);
+  border: 1px solid rgba(54, 201, 149, .22);
+  color: #72e0b8;
+}
+.card, .stat-card {
+  background: linear-gradient(155deg, rgba(17, 39, 68, .98), rgba(11, 28, 50, .98));
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow);
+}
+.card { border-radius: 16px; }
+.card h2, .section-heading h2 { color: #eaf2ff; }
+.stat-card { border-radius: 15px; }
+.stat-card:hover {
+  border-color: rgba(57, 139, 255, .55);
+  box-shadow: 0 16px 34px rgba(0, 0, 0, .28);
+}
+.stat-card p, .stat-caption { color: var(--muted); }
+.stat-card h3, .dashboard-page .stat-card h3 { color: #66adff; }
+.total-icon, .progress-icon {
+  background: rgba(57, 139, 255, .15); color: #69b0ff;
+}
+.open-icon { background: rgba(240, 173, 78, .14); color: #ffc36b; }
+.resolved-icon { background: rgba(54, 201, 149, .14); color: #62ddb3; }
+.priority-item, .ticket-filters {
+  background: rgba(6, 19, 36, .58);
+  border: 1px solid var(--border);
+  color: #dce9fb;
+}
+.priority-item strong { color: #f3f7ff; }
+label { color: #b9cbe3; }
+input, select, textarea {
+  background: #08182d;
+  border: 1px solid #294565;
+  color: #e8f1ff;
+  border-radius: 10px;
+}
+input::placeholder, textarea::placeholder { color: #7189a9; }
+input:focus, select:focus, textarea:focus {
+  background: #0a1c34;
+  border-color: #398bff;
+  box-shadow: 0 0 0 3px rgba(57, 139, 255, .16);
+}
+select option { background: #0d1d35; color: #e8f1ff; }
+button, .logout-button { border-radius: 10px; }
+.primary-button {
+  background: linear-gradient(135deg, #4b9cff, #1769d2);
+  color: #fff;
+  box-shadow: 0 7px 18px rgba(32, 117, 224, .22);
+}
+.primary-button:hover { background: linear-gradient(135deg, #66adff, #2479e4); }
+.secondary-button, .logout-button {
+  background: #142c4b;
+  border: 1px solid #2b4d73;
+  color: #c8dcf8;
+}
+.secondary-button:hover, .logout-button:hover {
+  background: #1a3a62;
+  border-color: #398bff;
+}
+.logout-button { text-decoration: none; }
+.table-label {
+  background: rgba(57, 139, 255, .12);
+  border: 1px solid rgba(57, 139, 255, .2);
+  color: #91c4ff;
+}
+table { color: #dce9fb; }
+th {
+  background: #102541;
+  color: #91aaca;
+  border-bottom: 1px solid var(--border);
+}
+td { color: #c8d8ed; border-bottom: 1px solid rgba(41, 69, 101, .58); }
+tbody tr:hover { background: rgba(57, 139, 255, .08); }
+td a { color: #69b0ff; }
+.badge { border: 1px solid transparent; }
+.badge.low { background: rgba(54, 201, 149, .13); color: #71dfb9; }
+.badge.medium { background: rgba(240, 173, 78, .14); color: #ffd080; }
+.badge.high, .badge.critical { background: rgba(255, 113, 133, .14); color: #ff9aaa; }
+.badge.status-open { background: rgba(57, 139, 255, .15); color: #8fc2ff; }
+.badge.status-in_progress { background: rgba(240, 173, 78, .14); color: #ffd080; }
+.badge.status-waiting { background: rgba(249, 137, 78, .14); color: #ffb184; }
+.badge.status-resolved { background: rgba(54, 201, 149, .14); color: #71dfb9; }
+.badge.status-closed { background: rgba(145, 166, 196, .14); color: #bdcce0; }
+.auth-layout { max-width: 1180px; }
+.auth-intro { background: linear-gradient(145deg, rgba(20, 52, 88, .38), transparent); border-radius: 20px; }
+.auth-feature { color: #c9d9ee; }
+.auth-feature span {
+  background: rgba(54, 201, 149, .14);
+  color: #69dfb7;
+}
+#message.error { color: #ff8192; }
+#message.ok { color: #68dfb6; }
+.empty-state { color: var(--muted); }
+.pagination { border-top-color: var(--border); }
+.pagination button {
+  background: #142c4b;
+  border-color: #2b4d73;
+  color: #c8dcf8;
+}
+.pagination button:hover:not(:disabled) { background: #1a3a62; border-color: #398bff; }
+#page-info {
+  background: #0c2039;
+  border-color: var(--border);
+  color: #b9cbe3;
+}
+.main-footer {
+  background: rgba(8, 22, 40, .92);
+  border-top: 1px solid var(--border);
+}
+.dashboard-page .section-heading p { color: var(--muted); }
+.dashboard-page .card { box-shadow: var(--shadow); }
+.dashboard-page .chart-box { min-height: 260px; }
+#ticket-details, #comments, #history { color: #c8d8ed; }
+#ticket-details h3 { color: #f1f6ff; }
+#ticket-details p, #history p { line-height: 1.8; }
+#comments .card {
+  background: rgba(7, 22, 40, .75);
+  box-shadow: none;
+  margin: 12px 0;
+}
+#comments .card p:first-child { color: #82baff; font-weight: 700; }
+#comments small { color: var(--muted); }
+a { color: #75b7ff; }
+a:hover { color: #a6d1ff; }
+@media (max-width: 750px) {
+  .auth-intro { padding: 22px 12px; }
+  body > header { padding: 12px 4%; flex-wrap: wrap; }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { scroll-behavior: auto !important; transition-duration: .01ms !important; }
+}
