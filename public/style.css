@@ -1096,3 +1096,46 @@ a:hover { color: #a6d1ff; }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { scroll-behavior: auto !important; transition-duration: .01ms !important; }
 }
+
+
+/* Ticket details: polished back navigation */
+.back-to-tickets {
+  display: inline-flex;
+  align-items: center;
+  gap: 11px;
+  min-height: 44px;
+  padding: 10px 17px;
+  margin: 0 0 22px;
+  border: 1px solid #294d76;
+  border-radius: 11px;
+  background: linear-gradient(135deg, #142f50, #0d2340);
+  color: #c9e1ff;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: .1px;
+  text-decoration: none;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, .16);
+  transition: background .18s ease, border-color .18s ease, transform .18s ease, box-shadow .18s ease;
+}
+.back-to-tickets span:first-child {
+  display: grid;
+  place-items: center;
+  width: 23px;
+  height: 23px;
+  border-radius: 7px;
+  background: rgba(57, 139, 255, .17);
+  color: #75b7ff;
+  font-size: 18px;
+  line-height: 1;
+}
+.back-to-tickets:hover {
+  color: #fff;
+  border-color: #398bff;
+  background: linear-gradient(135deg, #1b416c, #12345b);
+  box-shadow: 0 9px 24px rgba(20, 105, 210, .2);
+  transform: translateY(-2px);
+}
+.back-to-tickets:focus-visible {
+  outline: 3px solid rgba(91, 165, 255, .55);
+  outline-offset: 3px;
+}
