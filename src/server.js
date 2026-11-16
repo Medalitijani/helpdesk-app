@@ -426,13 +426,13 @@ app.patch("/api/tickets/:id", requireAuth, requireStaff, (req, res) => {
     ).get(ticketId);
     const changedLabels = changes.map((change) =>
       `${change.field.replace("_", " ")}: ${change.oldValue ?? "empty"} → ${change.newValue ?? "empty"}`,
-    ).join("\\n");
+    ).join("\n");
 
     if (recipients?.email && changes.some((change) => ["status", "priority"].includes(change.field))) {
       void sendNotification({
         to: recipients.email,
         subject: `Update on helpdesk ticket #${ticketId}`,
-        text: `Hello ${recipients.name}, your ticket "${recipients.title}" has been updated.\\n\\n${changedLabels}`,
+        text: `Hello ${recipients.name}, your ticket "${recipients.title}" has been updated.\n\n${changedLabels}`,
       });
     }
 
@@ -443,7 +443,7 @@ app.patch("/api/tickets/:id", requireAuth, requireStaff, (req, res) => {
         void sendNotification({
           to: technician.email,
           subject: `Ticket #${ticketId} assigned to you`,
-          text: `Hello ${technician.name}, ticket "${recipients.title}" has been assigned to you.\\n\\n${changedLabels}`,
+          text: `Hello ${technician.name}, ticket "${recipients.title}" has been assigned to you.\n\n${changedLabels}`,
         });
       }
     }
@@ -510,7 +510,7 @@ app.post("/api/tickets", requireAuth, (req, res) => {
     void sendNotification({
       to: staffEmails,
       subject: `New helpdesk ticket #${ticketId}`,
-      text: `A new ticket was submitted by ${requester?.name || "a user"}.\\n\\nTitle: ${title}\\nPriority: ${priority}\\nDescription: ${description}`,
+      text: `A new ticket was submitted by ${requester?.name || "a user"}.\n\nTitle: ${title}\nPriority: ${priority}\nDescription: ${description}`,
     });
   }
 
@@ -804,7 +804,7 @@ app.post("/api/tickets/:id/comments", requireAuth, (req, res) => {
     void sendNotification({
       to: recipients.map((person) => person.email),
       subject: `New comment on helpdesk ticket #${ticketId}`,
-      text: `A new comment was added by ${user.name} to ticket "${ticketInfo.title}".\\n\\nComment: ${message}`,
+      text: `A new comment was added by ${user.name} to ticket "${ticketInfo.title}".\n\nComment: ${message}`,
     });
   }
 
