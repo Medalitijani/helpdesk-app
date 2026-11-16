@@ -9,6 +9,7 @@ A web-based IT ticket management system. Users report technical problems, and te
 - Create tickets with category, priority and description
 - Ticket list with server-side search, status and priority filters, and pagination
 - Ticket detail page with comments and a full change history
+- Email notifications for ticket creation, assignment, status/priority updates, and new comments (optional Resend integration)
 - Staff controls to assign, change status and change priority
 - Automatic history record for every field change
 - Statistics dashboard (tickets by status, priority and technician, average resolution time)
@@ -68,6 +69,15 @@ node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
 ```
 
 Paste the generated value after `SESSION_SECRET=` in `.env`. Never commit this file.
+
+### Email notifications (optional)
+
+Email delivery uses [Resend](https://resend.com/). Create a Resend API key and verify the sender domain, then configure these environment variables in Render (or your local `.env`):
+
+- `RESEND_API_KEY`: your Resend API key.
+- `MAIL_FROM`: a verified sender, for example `IT Helpdesk <support@your-verified-domain.com>`.
+
+If these variables are not configured, the application continues to work normally and email notifications remain disabled. Email delivery failures are logged and do not interrupt ticket creation, updates, or comments.
 
 ### Run the application
 
@@ -173,7 +183,7 @@ npm run format    # Prettier
 
 - **CSRF protection:** the `SameSite=Lax` cookie limits cross-site request forgery, but a dedicated CSRF token would be stronger.
 - **Database:** SQLite suits a single-server demo. A production deployment with several instances would need PostgreSQL.
-- **Notifications:** users are not emailed when a ticket changes.
+- **Notifications:** optional email alerts are sent through Resend when tickets are created, assigned, updated, or commented on. Configure `RESEND_API_KEY` and `MAIL_FROM` to enable delivery.
 - **Attachments:** tickets cannot yet include files.
 - **Accessibility:** keyboard navigation and screen-reader testing have not been audited.
 
