@@ -7,6 +7,7 @@ const helmet = require("helmet");
 const rateLimit = require("express-rate-limit");
 const bcrypt = require("bcryptjs");
 const db = require("./db");
+const { sendNotification } = require("./notifications");
 
 if (!process.env.SESSION_SECRET) {
   console.error(
@@ -416,6 +417,38 @@ app.patch("/api/tickets/:id", requireAuth, requireStaff, (req, res) => {
 
   updateTicket();
 
+  // Send notifications after the database transaction succeeds.
+  if (changes.length > 0) {
+    const recipients = db.prepare(
+      `SELECT u.name, u.email, t.title
+       FROM tickets t JOIN users u ON u.id = t.created_by
+       WHERE t.id = ?`,
+    ).get(ticketId);
+    const changedLabels = changes.map((change) =>
+      `${change.field.replace("_", " ")}: ${change.oldValue ?? "empty"} → ${change.newValue ?? "empty"}`,
+    ).join("\\n");
+
+    if (recipients?.email && changes.some((change) => ["status", "priority"].includes(change.field))) {
+      void sendNotification({
+        to: recipients.email,
+        subject: `Update on helpdesk ticket #${ticketId}`,
+        text: `Hello ${recipients.name}, your ticket "${recipients.title}" has been updated.\\n\\n${changedLabels}`,
+      });
+    }
+
+    const assignmentChange = changes.find((change) => change.field === "assigned_to");
+    if (assignmentChange && assignedTo) {
+      const technician = db.prepare("SELECT name, email FROM users WHERE id = ?").get(assignedTo);
+      if (technician?.email) {
+        void sendNotification({
+          to: technician.email,
+          subject: `Ticket #${ticketId} assigned to you`,
+          text: `Hello ${technician.name}, ticket "${recipients.title}" has been assigned to you.\\n\\n${changedLabels}`,
+        });
+      }
+    }
+  }
+
   res.json({
     message: "Ticket updated successfully.",
     ticketId,
@@ -460,7 +493,28 @@ app.post("/api/tickets", requireAuth, (req, res) => {
     )
     .run(title, description, priority, categoryId, req.session.user.id);
 
-  res.status(201).json({ id: info.lastInsertRowid });
+  const ticketId = Number(info.lastInsertRowid);
+  const requester = db.prepare("SELECT name, email FROM users WHERE id = ?").get(req.session.user.id);
+  const staffEmails = db.prepare(
+    "SELECT email FROM users WHERE role IN ('technician', 'admin')",
+  ).all().map((person) => person.email).filter(Boolean);
+
+  if (requester?.email) {
+    void sendNotification({
+      to: requester.email,
+      subject: `Your helpdesk ticket #${ticketId} was created`,
+      text: `Hello ${requester.name}, your ticket "${title}" was created successfully. Our support team will review it shortly.`,
+    });
+  }
+  if (staffEmails.length) {
+    void sendNotification({
+      to: staffEmails,
+      subject: `New helpdesk ticket #${ticketId}`,
+      text: `A new ticket was submitted by ${requester?.name || "a user"}.\\n\\nTitle: ${title}\\nPriority: ${priority}\\nDescription: ${description}`,
+    });
+  }
+
+  res.status(201).json({ id: ticketId });
 });
 
 // List tickets with server-side filters and pagination.
@@ -725,6 +779,34 @@ app.post("/api/tickets/:id/comments", requireAuth, (req, res) => {
   `,
     )
     .get(result.lastInsertRowid);
+
+  // Notify the other side of the conversation; never email the author.
+  const ticketInfo = db.prepare(
+    `SELECT t.id, t.title, t.created_by, t.assigned_to,
+            owner.name AS owner_name, owner.email AS owner_email
+     FROM tickets t JOIN users owner ON owner.id = t.created_by
+     WHERE t.id = ?`,
+  ).get(ticketId);
+
+  let notifyUsers = [];
+  if (user.id === ticketInfo.created_by) {
+    if (ticketInfo.assigned_to) {
+      notifyUsers = db.prepare("SELECT name, email FROM users WHERE id = ?").all(ticketInfo.assigned_to);
+    } else {
+      notifyUsers = db.prepare("SELECT name, email FROM users WHERE role IN ('technician', 'admin')").all();
+    }
+  } else {
+    notifyUsers = [{ name: ticketInfo.owner_name, email: ticketInfo.owner_email }];
+  }
+
+  const recipients = notifyUsers.filter((person) => person.email && person.email !== user.email);
+  if (recipients.length) {
+    void sendNotification({
+      to: recipients.map((person) => person.email),
+      subject: `New comment on helpdesk ticket #${ticketId}`,
+      text: `A new comment was added by ${user.name} to ticket "${ticketInfo.title}".\\n\\nComment: ${message}`,
+    });
+  }
 
   res.status(201).json({
     message: "Comment added successfully.",
