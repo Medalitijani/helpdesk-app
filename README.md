@@ -1,5 +1,36 @@
 # IT Helpdesk
 
+> A full-stack IT service desk application for reporting, assigning, tracking, and resolving support requests.
+
+[![Live demo](https://img.shields.io/badge/Live-Demo-2563eb?style=for-the-badge)](https://helpdesk-app-9y13.onrender.com/)
+[![Node.js](https://img.shields.io/badge/Node.js-20%2B-339933?logo=nodedotjs&logoColor=white)](https://nodejs.org/)
+[![Express](https://img.shields.io/badge/Express-5-000000?logo=express&logoColor=white)](https://expressjs.com/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+
+**Live application:** https://helpdesk-app-9y13.onrender.com/
+
+## At a glance
+
+- Role-based workflows for requesters, technicians, and administrators
+- Ticket lifecycle management with comments and a complete activity history
+- Operational dashboard, filtering, pagination, and CSV reporting
+- Optional transactional email notifications through Resend
+
+## Contents
+
+- [Features](#features)
+- [Technologies](#technologies)
+- [Project structure](#project-structure)
+- [Getting started](#getting-started)
+- [Roles](#roles)
+- [API overview](#api-overview)
+- [Database](#database)
+- [Security choices](#security-choices)
+- [Tests](#tests)
+- [Known limitations and next steps](#known-limitations-and-next-steps)
+
+---
+
 A web-based IT ticket management system. Users report technical problems, and technicians and administrators triage, assign and resolve them, with a statistics dashboard and CSV export.
 
 ## Features
