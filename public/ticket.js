@@ -46,22 +46,55 @@ async function loadTicket() {
   const container = $("ticket-details");
   container.replaceChildren();
 
-  const heading = document.createElement("h3");
-  heading.textContent = `#${currentTicket.id} - ${currentTicket.title}`;
-  container.appendChild(heading);
+  $("ticket-reference").textContent = `TICKET #${currentTicket.id}`;
+  const heading = document.createElement("div");
+  heading.className = "ticket-title-block";
+  const title = document.createElement("h3");
+  title.textContent = currentTicket.title;
+  const description = document.createElement("p");
+  description.className = "ticket-description";
+  description.textContent = currentTicket.description || "No description provided.";
+  heading.append(title, description);
 
-  addText(container, "Description", currentTicket.description);
-  addText(container, "Category", currentTicket.category);
-  addText(container, "Priority", currentTicket.priority);
-  addText(container, "Status", currentTicket.status.replace("_", " "));
-  addText(container, "Created by", currentTicket.created_by_name);
-  addText(
-    container,
-    "Assigned technician",
-    currentTicket.assigned_to_name ?? "Unassigned",
-  );
-  addText(container, "Created at", formatDate(currentTicket.created_at));
-  addText(container, "Last updated", formatDate(currentTicket.updated_at));
+  const metadata = document.createElement("div");
+  metadata.className = "ticket-metadata-grid";
+  const status = document.createElement("div");
+  status.className = "ticket-meta-item";
+  status.innerHTML = '<span class="meta-label">STATUS</span>';
+  const statusBadge = document.createElement("span");
+  statusBadge.className = `badge status-${currentTicket.status}`;
+  statusBadge.textContent = currentTicket.status.replaceAll("_", " ");
+  status.appendChild(statusBadge);
+
+  const priority = document.createElement("div");
+  priority.className = "ticket-meta-item";
+  priority.innerHTML = '<span class="meta-label">PRIORITY</span>';
+  const priorityBadge = document.createElement("span");
+  priorityBadge.className = `badge ${currentTicket.priority}`;
+  priorityBadge.textContent = currentTicket.priority;
+  priority.appendChild(priorityBadge);
+
+  const fields = [
+    ["Category", currentTicket.category],
+    ["Created by", currentTicket.created_by_name],
+    ["Assigned technician", currentTicket.assigned_to_name ?? "Unassigned"],
+    ["Created at", formatDate(currentTicket.created_at)],
+    ["Last updated", formatDate(currentTicket.updated_at)],
+  ];
+  metadata.append(status, priority);
+  for (const [label, value] of fields) {
+    const item = document.createElement("div");
+    item.className = "ticket-meta-item";
+    const caption = document.createElement("span");
+    caption.className = "meta-label";
+    caption.textContent = label;
+    const content = document.createElement("strong");
+    content.className = "meta-value";
+    content.textContent = value ?? "Not available";
+    item.append(caption, content);
+    metadata.appendChild(item);
+  }
+  container.replaceChildren(heading, metadata);
 
   $("status").value = currentTicket.status;
   $("priority").value = currentTicket.priority;
@@ -103,9 +136,10 @@ async function loadComments() {
 
   for (const comment of comments) {
     const article = document.createElement("article");
-    article.className = "card";
+    article.className = "comment-item";
 
     const author = document.createElement("p");
+    author.className = "comment-author";
     author.textContent =
       comment.user_name ||
       comment.author_name ||
@@ -113,9 +147,11 @@ async function loadComments() {
       `User #${comment.user_id ?? ""}`;
 
     const message = document.createElement("p");
+    message.className = "comment-message";
     message.textContent = comment.message;
 
     const date = document.createElement("small");
+    date.className = "comment-date";
     date.textContent = formatDate(comment.created_at);
 
     article.append(author, message, date);
@@ -134,16 +170,23 @@ async function loadHistory() {
   }
 
   for (const item of history) {
-    const entry = document.createElement("p");
+    const entry = document.createElement("article");
+    entry.className = "history-entry";
 
     const name = item.changed_by_name || `User #${item.changed_by}`;
     const oldValue = item.old_value ?? "Empty";
     const newValue = item.new_value ?? "Empty";
 
-    entry.textContent =
-      `${name} changed ${item.field} from "${oldValue}" to "${newValue}" ` +
-      `(${formatDate(item.changed_at)})`;
-
+    const change = document.createElement("p");
+    change.className = "history-change";
+    change.textContent = `${name} changed ${item.field}`;
+    const values = document.createElement("p");
+    values.className = "history-values";
+    values.textContent = `${oldValue} → ${newValue}`;
+    const date = document.createElement("small");
+    date.className = "history-date";
+    date.textContent = formatDate(item.changed_at);
+    entry.append(change, values, date);
     container.appendChild(entry);
   }
 }
