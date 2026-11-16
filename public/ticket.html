@@ -3,91 +3,63 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#071326" />
     <title>Ticket Details - IT Helpdesk</title>
     <link rel="stylesheet" href="style.css" />
   </head>
-  <body>
-    <header>
-      <h1>IT Helpdesk</h1>
-      <div id="userbox" hidden>
-        <span id="whoami"></span>
-        <button id="logout" type="button">Log out</button>
+  <body class="ticket-page">
+    <header class="main-header">
+      <div class="header-brand">
+        <div class="brand-icon" aria-hidden="true">IT</div>
+        <div><h1>IT Helpdesk</h1><span>Support management workspace</span></div>
+      </div>
+      <div id="userbox" class="header-user" hidden>
+        <div class="user-details"><span id="whoami"></span><small>Signed in</small></div>
+        <button id="logout" class="logout-button" type="button">Log out</button>
       </div>
     </header>
 
-    <main>
-      <p>
-        <a class="back-to-tickets" href="/" aria-label="Back to tickets"><span aria-hidden="true">←</span><span>Back to tickets</span></a>
-      </p>
+    <main class="main-container ticket-container">
+      <a class="back-to-tickets" href="/" aria-label="Back to tickets"><span aria-hidden="true">←</span><span>All tickets</span></a>
 
-      <p id="message" role="alert"></p>
+      <div class="ticket-page-heading">
+        <div><span class="eyebrow">SUPPORT WORKSPACE</span><h2>Ticket overview</h2><p>Review the request, manage progress, and keep the conversation in one place.</p></div>
+        <div class="ticket-reference" id="ticket-reference">TICKET DETAILS</div>
+      </div>
 
-      <section class="card">
-        <h2>Ticket Details</h2>
-        <div id="ticket-details">Loading ticket...</div>
+      <p id="message" role="alert" aria-live="polite"></p>
+
+      <section class="card ticket-summary-card">
+        <div class="section-heading"><div><span class="eyebrow">REQUEST INFORMATION</span><h2>Ticket details</h2></div></div>
+        <div id="ticket-details" class="ticket-details-grid"><p class="loading-state">Loading ticket...</p></div>
       </section>
 
       <section class="card" id="staff-controls" hidden>
-        <h2>Manage Ticket</h2>
-
-        <form id="update-form">
-          <label>
-            Status
-            <select name="status" id="status">
-              <option value="open">Open</option>
-              <option value="in_progress">In progress</option>
-              <option value="waiting">Waiting</option>
-              <option value="resolved">Resolved</option>
-              <option value="closed">Closed</option>
-            </select>
-          </label>
-
-          <label>
-            Priority
-            <select name="priority" id="priority">
-              <option value="low">Low</option>
-              <option value="medium">Medium</option>
-              <option value="high">High</option>
-              <option value="critical">Critical</option>
-            </select>
-          </label>
-
-          <label>
-            Assign to technician
-            <select name="assigned_to" id="assigned-to">
-              <option value="">Unassigned</option>
-            </select>
-          </label>
-
-          <button type="submit">Save changes</button>
+        <div class="section-heading"><div><span class="eyebrow">TECHNICIAN WORKFLOW</span><h2>Manage ticket</h2><p>Update ownership, priority, and current status.</p></div></div>
+        <form id="update-form" class="ticket-management-form">
+          <label>Status<select name="status" id="status"><option value="open">Open</option><option value="in_progress">In progress</option><option value="waiting">Waiting</option><option value="resolved">Resolved</option><option value="closed">Closed</option></select></label>
+          <label>Priority<select name="priority" id="priority"><option value="low">Low</option><option value="medium">Medium</option><option value="high">High</option><option value="critical">Critical</option></select></label>
+          <label class="assignment-field">Assign to technician<select name="assigned_to" id="assigned-to"><option value="">Unassigned</option></select></label>
+          <div class="ticket-form-action"><button class="primary-button" type="submit">Save changes</button></div>
         </form>
       </section>
 
-      <section class="card">
-        <h2>Comments</h2>
+      <div class="ticket-lower-grid">
+        <section class="card ticket-comments-card">
+          <div class="section-heading"><div><span class="eyebrow">COMMUNICATION</span><h2>Comments</h2><p>Updates and discussion about this request.</p></div></div>
+          <div id="comments" class="comments-list"><p class="loading-state">Loading comments...</p></div>
+          <form id="comment-form" class="comment-composer">
+            <label for="comment-message">Add a comment</label>
+            <textarea id="comment-message" name="message" rows="4" required maxlength="2000" placeholder="Write an update or ask a question..."></textarea>
+            <div class="comment-form-footer"><small>Maximum 2,000 characters</small><button class="primary-button" type="submit">Send comment</button></div>
+          </form>
+        </section>
 
-        <div id="comments">Loading comments...</div>
-
-        <form id="comment-form">
-          <label>
-            Add a comment
-            <textarea
-              name="message"
-              rows="4"
-              required
-              maxlength="2000"
-              placeholder="Write your comment..."
-            ></textarea>
-          </label>
-
-          <button type="submit">Send comment</button>
-        </form>
-      </section>
-
-      <section class="card">
-        <h2>Ticket History</h2>
-        <div id="history">Loading history...</div>
-      </section>
+        <section class="card ticket-history-card">
+          <div class="section-heading"><div><span class="eyebrow">AUDIT TRAIL</span><h2>Ticket history</h2><p>A record of changes made to this ticket.</p></div></div>
+          <div id="history" class="history-list"><p class="loading-state">Loading history...</p></div>
+        </section>
+      </div>
     </main>
 
     <script src="ticket.js"></script>
