@@ -17,11 +17,11 @@ const PRIORITY_LABELS = {
 
 // Palette matching the application's blue theme
 const COLORS = {
-  primary: '#1f6fd1',
-  primaryDark: '#1f4e8c',
-  primaryLight: '#9cc4f5',
-  text: '#4a5b70',
-  grid: '#e6edf6',
+  primary: '#398bff',
+  primaryDark: '#1769d2',
+  primaryLight: '#8fc2ff',
+  text: '#b9cbe3',
+  grid: 'rgba(111, 151, 198, 0.18)',
   priority: {
     low: '#4caf7a',
     medium: '#f0ad4e',
@@ -96,7 +96,7 @@ function drawPriority(labels, values, keys) {
       datasets: [{
         data: values,
         backgroundColor: keys.map((k) => COLORS.priority[k] || COLORS.primary),
-        borderColor: '#ffffff',
+        borderColor: '#0d1d35',
         borderWidth: 3,
         hoverOffset: 6,
       }],
