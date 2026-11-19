@@ -823,7 +823,7 @@ app.post("/api/tickets/:id/comments", requireAuth, (req, res) => {
      WHERE t.id = ?`,
   ).get(ticketId);
 
-  let notifyUsers = [];
+  let notifyUsers;
   if (user.id === ticketInfo.created_by) {
     if (ticketInfo.assigned_to) {
       notifyUsers = db.prepare("SELECT name, email FROM users WHERE id = ?").all(ticketInfo.assigned_to);
