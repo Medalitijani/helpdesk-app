@@ -5,7 +5,7 @@ const fs = require("fs");
 const testDbFile = path.join(__dirname, "test.db");
 process.env.DB_FILE = testDbFile;
 process.env.SESSION_SECRET = "test-secret";
-process.env.ADMIN_BOOTSTRAP_TOKEN = "test-bootstrap-token";
+process.env.ADMIN_BOOTSTRAP_TOKEN = "test-bootstrap-token-0123456789-abcdefghijklmnopqrstuvwxyz";
 
 const request = require("supertest");
 const app = require("../src/server");
@@ -56,7 +56,7 @@ describe("Authentication", () => {
     });
 
     const res = await agent.post("/api/auth/bootstrap-admin")
-      .send({ token: "test-bootstrap-token" });
+      .send({ token: "test-bootstrap-token-0123456789-abcdefghijklmnopqrstuvwxyz" });
 
     expect(res.status).toBe(200);
     expect(res.body.user.role).toBe("admin");
@@ -70,7 +70,7 @@ describe("Authentication", () => {
       email: "initial-admin@example.com",
       password: "password123",
     });
-    await first.post("/api/auth/bootstrap-admin").send({ token: "test-bootstrap-token" });
+    await first.post("/api/auth/bootstrap-admin").send({ token: "test-bootstrap-token-0123456789-abcdefghijklmnopqrstuvwxyz" });
 
     const second = request.agent(app);
     await second.post("/api/auth/register").send({
@@ -79,7 +79,7 @@ describe("Authentication", () => {
       password: "password123",
     });
     const res = await second.post("/api/auth/bootstrap-admin")
-      .send({ token: "test-bootstrap-token" });
+      .send({ token: "test-bootstrap-token-0123456789-abcdefghijklmnopqrstuvwxyz" });
 
     expect(res.status).toBe(409);
     expect(db.prepare("SELECT COUNT(*) AS count FROM users WHERE role = 'admin'").get().count).toBe(1);
