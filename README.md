@@ -79,7 +79,7 @@ helpdesk-app/
 
 ### Prerequisites
 
-- Node.js 20 or newer
+- Node.js 22 or newer
 - npm
 
 ### Installation
@@ -99,7 +99,7 @@ cp .env.example .env
 node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
 ```
 
-Paste the generated value after `SESSION_SECRET=` in `.env`. Never commit this file.
+Paste the generated value after `SESSION_SECRET=` in `.env`. Generate a second independent value and set it as `ADMIN_BOOTSTRAP_TOKEN`. Keep both secrets private and never commit `.env`.
 
 ### Email notifications (optional)
 
@@ -118,7 +118,23 @@ npm run dev
 
 Open http://localhost:3000 in your browser.
 
-The first account you register becomes the **administrator**. Every later account is a normal user.
+### Create the first administrator
+
+1. Set a strong, private `ADMIN_BOOTSTRAP_TOKEN` in the server environment before starting the app. Generate one with `node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"` and keep it out of source control.
+2. Register the account that should become the administrator. Registration always creates a normal user.
+3. While signed in to that account, open the browser developer console on the app and run the following, replacing the placeholder with the configured token:
+
+```js
+fetch("/api/auth/bootstrap-admin", {
+  method: "POST",
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify({ token: "YOUR_ADMIN_BOOTSTRAP_TOKEN" })
+}).then((response) => response.json()).then(console.log);
+```
+
+The endpoint promotes the signed-in account only if no administrator exists. The database check runs inside an immediate transaction, so simultaneous requests cannot create multiple first administrators. Once an administrator exists, further bootstrap attempts are rejected. Remove or rotate the environment token after setup. Do not share it or expose it in browser screenshots.
+
+Every public registration creates a standard **user** account. To create the first administrator on a fresh database, register your own account, then use the one-time bootstrap procedure below.
 
 ### Load demo data (optional)
 
@@ -138,7 +154,7 @@ Please note:
 
 - The free instance sleeps after a period of inactivity, so the first visit can take around 50 seconds to load.
 - Data is stored in a local SQLite file on the free plan. It may be erased when the service restarts or is redeployed. Persistent storage would require a paid disk or a hosted database such as PostgreSQL.
-- **Public-demo security warning:** the current bootstrap logic promotes the first account in an empty database to administrator. If the database is reset or recreated, the next person to register could receive administrator access. Do not treat the public demo as a production service or enter real personal/support data. A controlled administrator-provisioning process must replace this first-registration rule before production use.
+- **Public-demo security note:** public registration creates only standard user accounts. Administrator creation requires an authenticated account and the private `ADMIN_BOOTSTRAP_TOKEN`, and is refused once an administrator exists. Keep this token out of the repository and remove it from the hosting environment after initial setup. This does not by itself make the demo production-ready; do not enter real personal or support data.
 - The app uses the default in-process session store provided by `express-session`; sessions are not durable across restarts and this store is not suitable for a production multi-instance deployment. Use a persistent session store for production.
 - Create accounts only for demonstration. On a fresh local database, the first registered account becomes the administrator.
 
@@ -203,7 +219,7 @@ The canonical database definition is maintained in [`src/sql/schema.sql`](src/sq
 npm test
 ```
 
-The tests use a separate database file (`tests/test.db`), so real data is never touched. They cover registration and login, the first-account-is-admin rule, ticket creation, access rules between users, and permission checks on staff-only routes.
+The tests use a separate database file (`tests/test.db`), so real data is never touched. They cover registration and login, the explicit administrator-bootstrap flow, ticket creation, access rules between users, and permission checks on staff-only routes.
 
 ## Code quality
 
@@ -215,7 +231,7 @@ npm run format    # Prettier
 ## Known limitations and next steps
 
 - **CSRF protection:** the `SameSite=Lax` cookie limits cross-site request forgery, but a dedicated CSRF token is not implemented.
-- **Administrator bootstrap:** the first account in an empty database becomes admin. This is convenient for local setup but unsafe for an openly accessible registration page after a database reset; replace it with controlled admin provisioning before production use.
+- **Administrator bootstrap:** public registration never grants admin privileges. The first admin must be provisioned with the private `ADMIN_BOOTSTRAP_TOKEN` while signed in; bootstrap is refused once an admin exists. Protect and remove the token after setup.
 - **Session persistence:** the default `express-session` MemoryStore is used. It is intended for development, loses sessions on restart, and must be replaced for production.
 - **Database:** SQLite suits a single-server demo. A production deployment with several instances would need PostgreSQL.
 - **Notifications:** optional email alerts are sent through Resend when tickets are created, assigned, updated, or commented on. Configure `RESEND_API_KEY` and `MAIL_FROM` to enable delivery.
