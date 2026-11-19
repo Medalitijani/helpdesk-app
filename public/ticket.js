@@ -22,14 +22,6 @@ function say(message, type = "") {
   el.className = type;
 }
 
-function addText(parent, label, value) {
-  const p = document.createElement("p");
-  const strong = document.createElement("strong");
-  strong.textContent = label + ": ";
-  p.append(strong, document.createTextNode(value ?? "Not available"));
-  parent.appendChild(p);
-}
-
 function formatDate(value) {
   return value ? String(value).replace("T", " ") : "Not available";
 }
