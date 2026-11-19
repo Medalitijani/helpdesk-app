@@ -218,6 +218,10 @@ npm run format    # Prettier
 - **Attachments:** tickets cannot yet include files.
 - **Accessibility:** keyboard navigation and screen-reader testing have not been audited.
 
+## Project ownership and scope
+
+This is a personal project developed and maintained by **Mohamed Ali Tijani**. The repository documents the application architecture, implementation, security controls, tests, deployment, and known limitations. It is a portfolio demonstration, not a production service for an external client.
+
 ## License
 
 MIT
