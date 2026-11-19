@@ -156,7 +156,7 @@ Please note:
 - Data is stored in a local SQLite file on the free plan. It may be erased when the service restarts or is redeployed. Persistent storage would require a paid disk or a hosted database such as PostgreSQL.
 - **Public-demo security note:** public registration creates only standard user accounts. Administrator creation requires an authenticated account and the private `ADMIN_BOOTSTRAP_TOKEN`, and is refused once an administrator exists. Keep this token out of the repository and remove it from the hosting environment after initial setup. This does not by itself make the demo production-ready; do not enter real personal or support data.
 - The app uses the default in-process session store provided by `express-session`; sessions are not durable across restarts and this store is not suitable for a production multi-instance deployment. Use a persistent session store for production.
-- Create accounts only for demonstration. On a fresh local database, the first registered account becomes the administrator.
+- Create accounts only for demonstration. Public registration always creates a standard user; provision the first administrator with the one-time bootstrap procedure described above.
 
 ## Roles
 
