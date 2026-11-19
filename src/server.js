@@ -194,14 +194,15 @@ app.post("/api/auth/bootstrap-admin", requireAuth, authLimiter, (req, res) => {
   }
 
   // An immediate transaction serialises concurrent bootstrap attempts.
-  const promoted = db.transaction.immediate(() => {
+  const promoteFirstAdmin = db.transaction(() => {
     const existingAdmin = db.prepare("SELECT id FROM users WHERE role = 'admin' LIMIT 1").get();
     if (existingAdmin) return false;
 
     const result = db.prepare("UPDATE users SET role = 'admin' WHERE id = ? AND role = 'user'")
       .run(req.session.user.id);
     return result.changes === 1;
-  })();
+  });
+  const promoted = promoteFirstAdmin.immediate();
 
   if (!promoted) {
     return res.status(409).json({ error: "An administrator already exists or this account cannot be promoted." });
