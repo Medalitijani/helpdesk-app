@@ -183,7 +183,7 @@ Access rules are enforced on the server. Hiding a button in the interface is nev
 
 Six tables: `users`, `categories`, `tickets`, `comments`, `ticket_history`, and the indexes on the most queried columns.
 
-![Database schema](docs/schema.png)
+The canonical database definition is maintained in [`src/sql/schema.sql`](src/sql/schema.sql). It defines the users, categories, tickets, comments, and ticket-history tables, together with the supporting indexes.
 
 ## Security choices
 
