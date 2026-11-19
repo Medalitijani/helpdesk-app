@@ -183,7 +183,7 @@ app.post("/api/auth/bootstrap-admin", requireAuth, authLimiter, (req, res) => {
   const configuredToken = process.env.ADMIN_BOOTSTRAP_TOKEN || "";
   const suppliedToken = String(req.body?.token || "");
 
-  if (!configuredToken) {
+  if (configuredToken.length < 32) {
     return res.status(503).json({ error: "Administrator bootstrap is not configured." });
   }
 
