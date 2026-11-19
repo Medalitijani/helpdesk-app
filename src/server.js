@@ -1,6 +1,7 @@
 require("dotenv").config();
 
 const path = require("path");
+const crypto = require("crypto");
 const express = require("express");
 const session = require("express-session");
 const helmet = require("helmet");
@@ -153,9 +154,8 @@ app.post("/api/auth/register", authLimiter, (req, res, next) => {
     });
   }
 
-  // The first account becomes admin. Everyone else is a normal user.
-  const isFirst = db.prepare("SELECT COUNT(*) AS c FROM users").get().c === 0;
-  const role = isFirst ? "admin" : "user";
+  // Public registration never grants privileged access.
+  const role = "user";
   const hash = bcrypt.hashSync(password, 12);
 
   const info = db
@@ -175,6 +175,40 @@ app.post("/api/auth/register", authLimiter, (req, res, next) => {
     if (err) return next(err);
     res.status(201).json({ user: req.session.user });
   });
+});
+
+// Promote the currently authenticated account only during a controlled,
+// one-time bootstrap. The secret must be supplied through the server environment.
+app.post("/api/auth/bootstrap-admin", requireAuth, authLimiter, (req, res) => {
+  const configuredToken = process.env.ADMIN_BOOTSTRAP_TOKEN || "";
+  const suppliedToken = String(req.body?.token || "");
+
+  if (!configuredToken) {
+    return res.status(503).json({ error: "Administrator bootstrap is not configured." });
+  }
+
+  const expected = Buffer.from(configuredToken, "utf8");
+  const supplied = Buffer.from(suppliedToken, "utf8");
+  if (expected.length !== supplied.length || !crypto.timingSafeEqual(expected, supplied)) {
+    return res.status(403).json({ error: "Invalid bootstrap token." });
+  }
+
+  // An immediate transaction serialises concurrent bootstrap attempts.
+  const promoted = db.transaction.immediate(() => {
+    const existingAdmin = db.prepare("SELECT id FROM users WHERE role = 'admin' LIMIT 1").get();
+    if (existingAdmin) return false;
+
+    const result = db.prepare("UPDATE users SET role = 'admin' WHERE id = ? AND role = 'user'")
+      .run(req.session.user.id);
+    return result.changes === 1;
+  })();
+
+  if (!promoted) {
+    return res.status(409).json({ error: "An administrator already exists or this account cannot be promoted." });
+  }
+
+  req.session.user.role = "admin";
+  res.json({ message: "Administrator access enabled for this account.", user: req.session.user });
 });
 
 app.post("/api/auth/login", authLimiter, (req, res, next) => {
