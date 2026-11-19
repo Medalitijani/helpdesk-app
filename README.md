@@ -43,7 +43,7 @@ A web-based IT ticket management system. Users report technical problems, and te
 - Email notifications for ticket creation, assignment, status/priority updates, and new comments (optional Resend integration)
 - Staff controls to assign, change status and change priority
 - Automatic history record for every field change
-- Statistics dashboard (tickets by status, priority and technician, average resolution time)
+- Statistics dashboard (tickets by status, priority and technician, average time to close)
 - CSV export of tickets, respecting the active filters
 - Automated tests for authentication, ticket access rules and permissions
 
