@@ -102,6 +102,40 @@ describe("Tickets and access rules", () => {
     expect(res.headers["x-total-count"]).toBe("1");
   });
 
+  test("a technician can update a ticket", async () => {
+    const requester = await registerAgent("Requester", "requester@example.com");
+    const technician = await registerAgent("Technician", "technician@example.com");
+    db.prepare("UPDATE users SET role = 'technician' WHERE email = ?").run("technician@example.com");
+
+    const created = await createTicket(requester);
+    const res = await technician
+      .patch(`/api/tickets/${created.body.id}`)
+      .send({ status: "in_progress" });
+
+    expect(res.status).toBe(200);
+    expect(db.prepare("SELECT status FROM tickets WHERE id = ?").get(created.body.id).status).toBe("in_progress");
+  });
+
+  test("a normal user cannot access staff statistics", async () => {
+    const user = await registerAgent("Normal User", "user@example.com");
+    const res = await user.get("/api/stats");
+
+    expect(res.status).toBe(403);
+  });
+
+  test("an admin can promote another user to technician", async () => {
+    const admin = await registerAgent("Admin User", "admin@example.com", { admin: true });
+    await registerAgent("Normal User", "user@example.com");
+    const user = db.prepare("SELECT id FROM users WHERE email = ?").get("user@example.com");
+
+    const res = await admin
+      .patch(`/api/users/${user.id}/role`)
+      .send({ role: "technician" });
+
+    expect(res.status).toBe(200);
+    expect(db.prepare("SELECT role FROM users WHERE id = ?").get(user.id).role).toBe("technician");
+  });
+
   test("a normal user cannot update a ticket", async () => {
     await registerAgent("Admin User", "admin@example.com");
     const user = await registerAgent("Normal User", "user@example.com");
