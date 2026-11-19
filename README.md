@@ -138,7 +138,9 @@ Please note:
 
 - The free instance sleeps after a period of inactivity, so the first visit can take around 50 seconds to load.
 - Data is stored in a local SQLite file on the free plan. It may be erased when the service restarts or is redeployed. Persistent storage would require a paid disk or a hosted database such as PostgreSQL.
-- Create an account with the form on the home page. The first account registered becomes the administrator.
+- **Public-demo security warning:** the current bootstrap logic promotes the first account in an empty database to administrator. If the database is reset or recreated, the next person to register could receive administrator access. Do not treat the public demo as a production service or enter real personal/support data. A controlled administrator-provisioning process must replace this first-registration rule before production use.
+- The app uses the default in-process session store provided by `express-session`; sessions are not durable across restarts and this store is not suitable for a production multi-instance deployment. Use a persistent session store for production.
+- Create accounts only for demonstration. On a fresh local database, the first registered account becomes the administrator.
 
 ## Roles
 
@@ -212,7 +214,9 @@ npm run format    # Prettier
 
 ## Known limitations and next steps
 
-- **CSRF protection:** the `SameSite=Lax` cookie limits cross-site request forgery, but a dedicated CSRF token would be stronger.
+- **CSRF protection:** the `SameSite=Lax` cookie limits cross-site request forgery, but a dedicated CSRF token is not implemented.
+- **Administrator bootstrap:** the first account in an empty database becomes admin. This is convenient for local setup but unsafe for an openly accessible registration page after a database reset; replace it with controlled admin provisioning before production use.
+- **Session persistence:** the default `express-session` MemoryStore is used. It is intended for development, loses sessions on restart, and must be replaced for production.
 - **Database:** SQLite suits a single-server demo. A production deployment with several instances would need PostgreSQL.
 - **Notifications:** optional email alerts are sent through Resend when tickets are created, assigned, updated, or commented on. Configure `RESEND_API_KEY` and `MAIL_FROM` to enable delivery.
 - **Attachments:** tickets cannot yet include files.
