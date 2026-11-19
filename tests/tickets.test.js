@@ -5,7 +5,7 @@ const fs = require("fs");
 const testDbFile = path.join(__dirname, "test.db");
 process.env.DB_FILE = testDbFile;
 process.env.SESSION_SECRET = "test-secret";
-process.env.ADMIN_BOOTSTRAP_TOKEN = "test-bootstrap-token";
+process.env.ADMIN_BOOTSTRAP_TOKEN = "test-bootstrap-token-0123456789-abcdefghijklmnopqrstuvwxyz";
 
 const request = require("supertest");
 const app = require("../src/server");
@@ -34,7 +34,7 @@ async function registerAgent(name, email, { admin = false } = {}) {
 
   if (admin) {
     const bootstrap = await agent.post("/api/auth/bootstrap-admin")
-      .send({ token: "test-bootstrap-token" });
+      .send({ token: "test-bootstrap-token-0123456789-abcdefghijklmnopqrstuvwxyz" });
     if (bootstrap.status !== 200) throw new Error("Could not bootstrap test admin");
   }
 
@@ -77,7 +77,7 @@ describe("Tickets and access rules", () => {
   });
 
   test("a user only sees their own tickets in the list", async () => {
-    await registerAgent("Admin User", "admin@example.com");
+    await registerAgent("Admin User", "admin@example.com", { admin: true });
     const owner = await registerAgent("Owner", "owner@example.com");
     const other = await registerAgent("Other", "other@example.com");
 
