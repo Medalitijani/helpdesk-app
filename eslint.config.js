@@ -23,6 +23,7 @@ const nodeGlobals = {
   __dirname: 'readonly',
   __filename: 'readonly',
   Buffer: 'readonly',
+  fetch: 'readonly',
 };
 
 // Jest globals (tests/*.js).
